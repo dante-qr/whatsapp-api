@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<img id="qrWhatsapp" src="" alt="" />
+
+		<script>
+			const fetchQr = async () => {
+				const response = await fetch("http://localhost:3000/sessions/add", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"x-api-key": "a6bc226axxxxxxxxxxxxxx",
+					},
+					body: JSON.stringify({
+						sessionId: "danteygy",
+					}),
+				});
+				const data = await response.json();
+
+				document.getElementById("qrWhatsapp").src = data.qr;
+			};
+
+			// fetch each 5 seconds
+			setInterval(() => {
+				fetchQr();
+			}, 10000);
+		</script>
+	</body>
+</html>
