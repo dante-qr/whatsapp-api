@@ -1,5 +1,6 @@
 import makeWASocket, {
 	DisconnectReason,
+	fetchLatestBaileysVersion,
 	isJidBroadcast,
 	makeCacheableSignalKeyStore,
 } from "baileys";
@@ -42,6 +43,7 @@ class WhatsappService {
 			select: { sessionId: true, data: true },
 			where: { id: { startsWith: env.SESSION_CONFIG_ID } },
 		});
+
 		for (const { sessionId, data } of storedSessions) {
 			const { readIncomingMessages, ...socketConfig } = JSON.parse(data);
 			WhatsappService.createSession({ sessionId, readIncomingMessages, socketConfig });
@@ -81,6 +83,10 @@ class WhatsappService {
 					prisma.message.deleteMany({ where: { sessionId } }),
 					prisma.groupMetadata.deleteMany({ where: { sessionId } }),
 					prisma.session.deleteMany({ where: { sessionId } }),
+					prisma.whatsAppQR.updateMany({
+						where: { sessionId, isValid: true },
+						data: { isValid: false },
+					})
 				]);
 				logger.info({ session: sessionId }, "Session destroyed");
 			} catch (e) {
@@ -126,6 +132,19 @@ class WhatsappService {
 				if (res && !res.headersSent) {
 					try {
 						const qr = await toDataURL(connectionState.qr);
+
+						await prisma.whatsAppQR.updateMany({
+							where: { sessionId, isValid: true },
+							data: { isValid: false },
+						});
+
+						await prisma.whatsAppQR.create({
+							data: {
+								sessionId,
+								qrCode: qr,
+							},
+						});
+
 						WhatsappService.updateWaConnection(sessionId, WAStatus.WaitQrcodeAuth);
 						emitEvent("qrcode.updated", sessionId, { qr });
 						res.status(200).json({ qr });
@@ -187,6 +206,7 @@ class WhatsappService {
 			? handleSSEConnectionUpdate
 			: handleNormalConnectionUpdate;
 		const { state, saveCreds } = await useSession(sessionId);
+		const { version } = await fetchLatestBaileysVersion();
 		const socket = makeWASocket({
 			printQRInTerminal: true,
 			browser: [env.BOT_NAME || "Whatsapp Bot", "Chrome", "3.0"],
@@ -196,7 +216,7 @@ class WhatsappService {
 				creds: state.creds,
 				keys: makeCacheableSignalKeyStore(state.keys, logger),
 			},
-			version: [2, 3000, 1015901307],
+			version,
 			logger,
 			shouldIgnoreJid: (jid) => isJidBroadcast(jid),
 			getMessage: async (key) => {
@@ -286,7 +306,7 @@ class WhatsappService {
 		try {
 			if (type === "number") {
 				const [result] = await session.onWhatsApp(jid);
-				if(result?.exists) {
+				if (result?.exists) {
 					return result.jid;
 				} else {
 					return null;
@@ -294,7 +314,7 @@ class WhatsappService {
 			}
 
 			const groupMeta = await session.groupMetadata(jid);
-			if(groupMeta.id) {
+			if (groupMeta.id) {
 				return groupMeta.id;
 			} else {
 				return null;

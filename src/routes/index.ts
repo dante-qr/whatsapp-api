@@ -13,4 +13,9 @@ router.use("/:sessionId/contacts", apiKeyValidator, contactRoutes);
 router.use("/:sessionId/groups", apiKeyValidator, groupRoutes);
 router.use("/:sessionId/messages", apiKeyValidator, messageRoutes);
 
+router.post("/webhook", (req, res) => {
+	console.log("🚀 ~ MYHOOK ~ req:", req.body);
+	res.status(200).send("OK");
+});
+
 export default router;
