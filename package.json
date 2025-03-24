@@ -1,11 +1,11 @@
 {
-	"name": "baileys-api",
+	"name": "whatsapp-api",
 	"version": "2.0.0",
 	"description": "Simple WhatsApp REST API with multiple device support",
 	"main": "dist/main.js",
 	"scripts": {
 		"build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src",
-		"start": "node -r tsconfig-paths/register -r ts-node ./dist/main.js",
+		"start": "node ./dist/main.js",
 		"dev": "nodemon src/main.ts",
 		"lint": "eslint . --ext .ts",
 		"format": "prettier . --write",
@@ -13,10 +13,6 @@
 		"changelog:preview": "conventional-changelog -p angular -u",
 		"changelog:last": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
 		"db:deploy": "prisma migrate deploy && prisma generate"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/nizarfadlan/baileys-api.git"
 	},
 	"keywords": [
 		"chat",
@@ -35,15 +31,6 @@
 		"bot",
 		"baileys-api"
 	],
-	"author": {
-		"name": "Nizar Izzuddin Yatim Fadlan",
-		"email": "hello@nizarfadlan.dev"
-	},
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/nizarfadlan/baileys-api/issues"
-	},
-	"homepage": "https://github.com/nizarfadlan/baileys-api#readme",
 	"dependencies": {
 		"@hapi/boom": "^10.0.1",
 		"@prisma/client": "^4.16.2",
@@ -51,6 +38,7 @@
 		"baileys": "^6.7.7",
 		"cors": "^2.8.5",
 		"dotenv": "^16.4.5",
+		"dotenv-expand": "^12.0.1",
 		"express": "^4.19.2",
 		"express-validator": "^7.0.1",
 		"link-preview-js": "^3.0.5",

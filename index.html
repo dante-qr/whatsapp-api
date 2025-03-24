@@ -8,21 +8,19 @@
 	<body>
 		<img id="qrWhatsapp" src="" alt="" />
 
-		<input type="text" name="sessionId" id="sessionId">
+		<input type="text" name="sessionId" id="sessionId" />
 
-		<button onclick="fetchQr()">
-			GET SESSION
-		</button>
+		<button onclick="fetchQr()">GET SESSION</button>
 
 		<script>
 			const fetchQr = async () => {
 				const sessionId = document.getElementById("sessionId").value; // Get sessionId from input
 
-				const response = await fetch("http://localhost:3000/sessions/add", {
+				const response = await fetch("http://localhost:3001/sessions/add", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
-						"x-api-key": "34mwDoyZisQKGC4jtFihjaB8Ev68eDEenpiPfhhZEXgYZM7ulvRi2licwa3ilYXSxbLVl3BVitC3GkpYzydxGilYoRoAwhwnvL9JC8QiAyuZdBuJn3XjQHDhnQCpeojP",
+						"x-api-key": "mi-api-key",
 					},
 					body: JSON.stringify({
 						sessionId: sessionId, // Use the sessionId from input

@@ -27,8 +27,10 @@ export function emitEvent(
 	status: "success" | "error" = "success",
 	message?: string,
 ) {
+	sendSessionWebhooks(event, sessionId, data, status, message);
+
 	if (env.ENABLE_WEBHOOK) {
-		sendSessionWebhooks(event, sessionId, data, status, message);
+		sendWebhook(event, sessionId, data, status, message);
 	}
 
 	if (!socketServer) {
@@ -90,7 +92,7 @@ async function sendSessionWebhooks(
 		}
 	}
 
-	if(sessionWebhooks.length === 0) {
+	if (sessionWebhooks.length === 0) {
 		console.warn("No webhooks found for ", sessionId);
 	}
 }

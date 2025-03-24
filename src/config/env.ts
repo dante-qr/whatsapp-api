@@ -1,14 +1,9 @@
 import { LogLevel } from "@/types";
 import { config } from "dotenv";
+import { expand } from "dotenv-expand";
 import { z } from "zod";
 
-config();
-
-/* POSTGRES_USER=baileys_admin
-POSTGRES_PASSWORD=10y-OtRoe7o7
-POSTGRES_DB=bailey
-DATABASE_URL=postgres://baileys_admin:10y-OtRoe7o7@baileys-db:5432/bailey
- */
+expand(config());
 
 interface CustomProcessEnv {
 	PORT?: number;
@@ -27,6 +22,8 @@ interface CustomProcessEnv {
 	POSTGRES_USER?: string;
 	POSTGRES_PASSWORD?: string;
 	POSTGRES_DB?: string;
+	POSTGRES_HOST?: string;
+	POSTGRES_PORT?: number;
 }
 
 const envSchema = z
@@ -81,6 +78,8 @@ const processEnv: Partial<CustomProcessEnv> = {
 	POSTGRES_USER: process.env.POSTGRES_USER,
 	POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
 	POSTGRES_DB: process.env.POSTGRES_DB,
+	POSTGRES_HOST: process.env.POSTGRES_HOST,
+	POSTGRES_PORT: process.env.POSTGRES_PORT ? Number(process.env.POSTGRES_PORT) : 5432,
 };
 
 type EnvInput = z.input<typeof envSchema>;
