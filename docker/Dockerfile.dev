@@ -2,9 +2,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+RUN apk add --no-cache openssl
+
 COPY package*.json pnpm-lock.yaml ./
 
-RUN corepack enable && pnpm install --quiet
+RUN npm i -g pnpm && pnpm install --quiet
 
 RUN pnpm exec prisma migrate
 
@@ -12,4 +14,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "pnpm", "run", "dev" ]
+CMD ["sh", "-c", "pnpm run db:deploy && pnpm run dev"]

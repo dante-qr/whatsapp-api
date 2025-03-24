@@ -4,6 +4,12 @@ import { z } from "zod";
 
 config();
 
+/* POSTGRES_USER=baileys_admin
+POSTGRES_PASSWORD=10y-OtRoe7o7
+POSTGRES_DB=bailey
+DATABASE_URL=postgres://baileys_admin:10y-OtRoe7o7@baileys-db:5432/bailey
+ */
+
 interface CustomProcessEnv {
 	PORT?: number;
 	NODE_ENV?: "development" | "production" | "test";
@@ -18,6 +24,9 @@ interface CustomProcessEnv {
 	SSE_MAX_QR_GENERATION?: number;
 	SESSION_CONFIG_ID?: string;
 	API_KEY?: string;
+	POSTGRES_USER?: string;
+	POSTGRES_PASSWORD?: string;
+	POSTGRES_DB?: string;
 }
 
 const envSchema = z
@@ -35,6 +44,9 @@ const envSchema = z
 		SSE_MAX_QR_GENERATION: z.number().default(5),
 		SESSION_CONFIG_ID: z.string().optional().default("session-config"),
 		API_KEY: z.string(),
+		POSTGRES_USER: z.string(),
+		POSTGRES_PASSWORD: z.string(),
+		POSTGRES_DB: z.string(),
 	})
 	.superRefine((data, ctx) => {
 		if (data.ENABLE_WEBHOOK && !data.URL_WEBHOOK) {
@@ -66,6 +78,9 @@ const processEnv: Partial<CustomProcessEnv> = {
 		: undefined,
 	SESSION_CONFIG_ID: process.env.SESSION_CONFIG_ID,
 	API_KEY: process.env.API_KEY,
+	POSTGRES_USER: process.env.POSTGRES_USER,
+	POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
+	POSTGRES_DB: process.env.POSTGRES_DB,
 };
 
 type EnvInput = z.input<typeof envSchema>;

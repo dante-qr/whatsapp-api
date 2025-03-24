@@ -8,27 +8,30 @@
 	<body>
 		<img id="qrWhatsapp" src="" alt="" />
 
+		<input type="text" name="sessionId" id="sessionId">
+
+		<button onclick="fetchQr()">
+			GET SESSION
+		</button>
+
 		<script>
 			const fetchQr = async () => {
+				const sessionId = document.getElementById("sessionId").value; // Get sessionId from input
+
 				const response = await fetch("http://localhost:3000/sessions/add", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
-						"x-api-key": "a6bc226axxxxxxxxxxxxxx",
+						"x-api-key": "34mwDoyZisQKGC4jtFihjaB8Ev68eDEenpiPfhhZEXgYZM7ulvRi2licwa3ilYXSxbLVl3BVitC3GkpYzydxGilYoRoAwhwnvL9JC8QiAyuZdBuJn3XjQHDhnQCpeojP",
 					},
 					body: JSON.stringify({
-						sessionId: "danteygy",
+						sessionId: sessionId, // Use the sessionId from input
 					}),
 				});
 				const data = await response.json();
 
 				document.getElementById("qrWhatsapp").src = data.qr;
 			};
-
-			// fetch each 5 seconds
-			setInterval(() => {
-				fetchQr();
-			}, 10000);
 		</script>
 	</body>
 </html>

@@ -86,7 +86,7 @@ class WhatsappService {
 					prisma.whatsAppQR.updateMany({
 						where: { sessionId, isValid: true },
 						data: { isValid: false },
-					})
+					}),
 				]);
 				logger.info({ session: sessionId }, "Session destroyed");
 			} catch (e) {
@@ -274,6 +274,8 @@ class WhatsappService {
 			update: {},
 			where: { sessionId_id: { id: configID, sessionId } },
 		});
+
+		//await WhatsappService.loadSessionWebhooks(sessionId);
 	}
 
 	static getSessionStatus(session: Session) {

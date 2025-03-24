@@ -14,8 +14,13 @@ router.use("/:sessionId/groups", apiKeyValidator, groupRoutes);
 router.use("/:sessionId/messages", apiKeyValidator, messageRoutes);
 
 router.post("/webhook", (req, res) => {
-	console.log("🚀 ~ MYHOOK ~ req:", req.body);
-	res.status(200).send("OK");
+	console.log("🚀 ~ MYHOOK 1 ~ req:", req.body);
+	res.status(200).send("OK OLD URL");
+});
+
+router.post("/webhookxddddd", (req, res) => {
+	console.log("🚀 ~ MYHOOK 2 ~ req:", req.body);
+	res.status(200).send("OK NUEVA URL");
 });
 
 export default router;

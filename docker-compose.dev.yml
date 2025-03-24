@@ -25,18 +25,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://postgres:2024pass@baileys-db:5432/bailey
-    depends_on:
-      - baileys-db
-    networks:
-      - wpp-net
-  pgadmin-compose:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "placeholder@example.com"
-      PGADMIN_DEFAULT_PASSWORD: "fakepassword123!"
-    ports:
-      - "16543:80"
+      DATABASE_URL: postgres://vendis_whatsapp:V3nd1s_Wh4ts%40pp**!@104.36.110.30:5555/vendis_whatsapp
     depends_on:
       - baileys-db
     networks:

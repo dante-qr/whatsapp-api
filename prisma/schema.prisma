@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  //binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -177,6 +177,15 @@ model WhatsAppQR {
   qrCode     String   @db.Text
   createdAt  DateTime @default(now())
   isValid    Boolean  @default(true)
+
+  @@index([sessionId])
+}
+
+model Webhook {
+  id        Int       @id @default(autoincrement())
+  sessionId String    @db.VarChar(128)
+  url       String    @db.VarChar(255)
+  events    String    @db.Text
 
   @@index([sessionId])
 }
