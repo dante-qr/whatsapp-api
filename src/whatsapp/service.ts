@@ -206,6 +206,12 @@ class WhatsappService {
 			: handleNormalConnectionUpdate;
 		const { state, saveCreds } = await useSession(sessionId);
 
+		const version = (await fetch(
+			"https://raw.githubusercontent.com/WhiskeySockets/Baileys/master/src/Defaults/baileys-version.json",
+		).then((res) => res.json())) as unknown as {
+			version: [number, number, number];
+		};
+
 		const socket = makeWASocket({
 			printQRInTerminal: true,
 			browser: [env.BOT_NAME || "Whatsapp Bot", "Chrome", "3.0"],
@@ -215,7 +221,7 @@ class WhatsappService {
 				creds: state.creds,
 				keys: makeCacheableSignalKeyStore(state.keys, logger),
 			},
-			version: [2, 3000, 1015901307],
+			version: version.version,
 			logger,
 			shouldIgnoreJid: (jid) => isJidBroadcast(jid),
 			getMessage: async (key) => {
@@ -279,7 +285,7 @@ class WhatsappService {
 
 	static getSessionStatus(session: Session) {
 		const state = ["CONNECTING", "CONNECTED", "DISCONNECTING", "DISCONNECTED"];
-		let status = state[(session.ws as WebSocketType).readyState];
+		let status = state[(session.ws as unknown as WebSocketType).readyState];
 		status = session.user ? "AUTHENTICATED" : status;
 		return session.waStatus !== WAStatus.Unknown ? session.waStatus : status.toLowerCase();
 	}
