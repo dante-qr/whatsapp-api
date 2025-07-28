@@ -206,6 +206,9 @@ class WhatsappService {
 			: handleNormalConnectionUpdate;
 		const { state, saveCreds } = await useSession(sessionId);
 
+		// Note: This external version fetching has been disabled due to frequent changes
+		// in the Baileys repository structure. The version file may be moved, renamed, or deleted.
+		// Using a hardcoded version is more reliable for production environments.
 		/* 	const version = (await fetch(
 			"https://raw.githubusercontent.com/WhiskeySockets/Baileys/master/src/Defaults/baileys-version.json",
 		).then((res) => res.json())) as unknown as {
@@ -221,6 +224,8 @@ class WhatsappService {
 				creds: state.creds,
 				keys: makeCacheableSignalKeyStore(state.keys, logger),
 			},
+			// Hardcoded version - update this when Baileys updates their supported version
+			// Check: https://github.com/WhiskeySockets/Baileys/blob/master/src/Defaults/baileys-version.ts
 			version: [2, 3000, 1023223821],
 			logger,
 			shouldIgnoreJid: (jid) => isJidBroadcast(jid),

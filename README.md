@@ -1,4 +1,4 @@
-# Baileys API
+# WhatsApp API
 
 Baileys is a simple, fast and easy to use WhatsApp Web API written in TypeScript. It is designed to be simple to use and is optimized for usage in Node.js.
 
@@ -110,6 +110,93 @@ npm run start
 The API Documentation can fork **Postman Collection** in your workspace Postman
 
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/14456337-fb3349c5-de0e-40ec-b909-3922f4a95b7a?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D14456337-fb3349c5-de0e-40ec-b909-3922f4a95b7a%26entityType%3Dcollection%26workspaceId%3Dfbd81f05-e0e1-42cb-b893-60063cf8bcd1)
+
+## Troubleshooting
+
+### WhatsApp Version Compatibility Issues
+
+One of the most common issues with this API is related to WhatsApp version compatibility. The Baileys library frequently updates the WhatsApp Web version it supports, and using an outdated version can cause the service to fail in production.
+
+#### Symptoms
+
+-   Service suddenly stops working in production
+-   Connection failures when creating WhatsApp sessions
+-   Authentication errors
+-   QR code generation failures
+
+#### Common Causes
+
+1. **Hardcoded version outdated**: The WhatsApp version specified in the code becomes obsolete
+2. **External version file unavailable**: References to external version files (like GitHub raw files) that may be moved, renamed, or deleted
+3. **Baileys library updates**: New versions of Baileys may change how version handling works
+
+#### Solutions
+
+##### 1. Update WhatsApp Version Manually
+
+If the service fails due to version issues, you can manually update the version in `/src/whatsapp/service.ts`:
+
+```typescript
+// Find this line in the makeWASocket configuration:
+version: [2, 3000, 1023223821], // Update these numbers
+
+// Replace with the latest version from Baileys repository
+```
+
+##### 2. Get Latest Version from Baileys Repository
+
+To find the current WhatsApp version supported by Baileys:
+
+1. Go to the [Baileys GitHub repository](https://github.com/WhiskeySockets/Baileys)
+2. Navigate to `src/Defaults/baileys-version.ts` (or similar file)
+3. Look for the version array, example:
+
+    ```typescript
+    export const DEFAULT_VERSION: [number, number, number] = [2, 3000, 1023223821];
+    ```
+
+4. Copy these numbers to your service.ts file
+
+##### 3. Remove External Version Fetching
+
+If your code attempts to fetch version from external sources (like GitHub raw files), consider removing this dependency:
+
+```typescript
+// Remove or comment out code like this:
+/* const version = (await fetch(
+	"https://raw.githubusercontent.com/WhiskeySockets/Baileys/master/src/Defaults/baileys-version.json",
+).then((res) => res.json())) as unknown as {
+	version: [number, number, number];
+}; */
+
+// And use a hardcoded version instead:
+version: [2, 3000, 1023223821],
+```
+
+##### 4. Monitor Baileys Updates
+
+-   Subscribe to the [Baileys repository](https://github.com/WhiskeySockets/Baileys) for updates
+-   Check the releases page regularly
+-   Test version updates in development before deploying to production
+
+#### Prevention Tips
+
+1. **Pin specific versions**: Use exact versions in package.json instead of ranges
+2. **Regular testing**: Test your WhatsApp integration regularly in staging
+3. **Monitor logs**: Set up proper logging to catch version-related errors early
+4. **Fallback mechanisms**: Implement retry logic and error handling for connection failures
+
+#### Emergency Fix
+
+If your production service is down due to version issues:
+
+1. Check the current Baileys version: `npm list baileys`
+2. Visit the Baileys GitHub repository
+3. Find the latest supported WhatsApp version in their source code
+4. Update the version array in your `service.ts`
+5. Restart your service
+
+Remember: WhatsApp Web frequently updates their protocol, so staying updated with Baileys releases is crucial for maintaining service stability.
 
 ## Notes
 
