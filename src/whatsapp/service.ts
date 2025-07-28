@@ -206,11 +206,11 @@ class WhatsappService {
 			: handleNormalConnectionUpdate;
 		const { state, saveCreds } = await useSession(sessionId);
 
-		const version = (await fetch(
+		/* 	const version = (await fetch(
 			"https://raw.githubusercontent.com/WhiskeySockets/Baileys/master/src/Defaults/baileys-version.json",
 		).then((res) => res.json())) as unknown as {
 			version: [number, number, number];
-		};
+		}; */
 
 		const socket = makeWASocket({
 			printQRInTerminal: true,
@@ -221,7 +221,7 @@ class WhatsappService {
 				creds: state.creds,
 				keys: makeCacheableSignalKeyStore(state.keys, logger),
 			},
-			version: version.version,
+			version: [2, 3000, 1023223821],
 			logger,
 			shouldIgnoreJid: (jid) => isJidBroadcast(jid),
 			getMessage: async (key) => {
